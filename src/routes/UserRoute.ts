@@ -1,10 +1,13 @@
 import express from "express";
+import AuthenticateToken from "../middlewares/AuthenticateToken";
 
 const router = express.Router();
 
-router.get("/profile", (req, res) => {
+router.get("/profile", AuthenticateToken, async (req, res) => {
+    const user = req.user;
     return res.status(200).json({
         message: "Profile",
+        user,
     });
 });
 
