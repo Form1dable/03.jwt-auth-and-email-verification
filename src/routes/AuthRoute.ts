@@ -1,27 +1,22 @@
 import express from "express";
-import User from "../models/User";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import rateLimit from "express-rate-limit";
+
+// Middleware Imports
+import { SignUpRateLimit } from "../middlewares/RateLimiter";
+import AuthenticateToken from "../middlewares/AuthenticateToken";
 
 // Controllers
 import {
+    VerifyEmailPostController,
     SignupPostController,
     SignInPostController,
+    SendEmailGetController,
 } from "../controllers/AuthController";
 
 const router = express.Router();
 
-// Rate Limiter
-const createAccountLimiter = rateLimit({
-    windowMs: 1 * 60 * 1000,
-    max: 10,
-    message:
-        "Too many accounts have been created from this IP, please try again later.",
-});
-
 router.post("/sign-in", SignInPostController);
-
-router.post("/sign-up", createAccountLimiter, SignupPostController);
+router.post("/sign-up", SignUpRateLimit, SignupPostController);
+router.post("/verify-email/:token", VerifyEmailPostController);
+router.get("/send-email", AuthenticateToken, SendEmailGetController);
 
 export default router;
