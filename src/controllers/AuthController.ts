@@ -86,7 +86,7 @@ export async function VerifyEmailPostController(req, res, next) {
             message: "Invalid",
         });
     }
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, id) => {
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, id) => {
         if (err) {
             return res.status(403).json({
                 message: "Invalid",
